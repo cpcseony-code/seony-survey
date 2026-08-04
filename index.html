@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>海牡丹 Seony｜產品存續評估問卷</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg:#F2F7F5;
+  --surface:#FFFFFF;
+  --ink:#0B3D3A;
+  --ink-soft:#4A6B63;
+  --teal:#12564A;
+  --teal-deep:#0B3D3A;
+  --peony:#B8496B;
+  --peony-soft:#E7C6D0;
+  --border:#DCE7E2;
+  --border-soft:#EAF1EE;
+  --danger:#B8496B;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -10%, #E4F0EA 0%, transparent 60%),
+    radial-gradient(ellipse 700px 500px at 110% 10%, #F6E9ED 0%, transparent 55%),
+    var(--bg);
+  min-height:100vh;
+  font-family:'Noto Sans TC', sans-serif;
+  color:var(--ink);
+  display:flex;
+  justify-content:center;
+  padding:40px 16px 80px;
+}
+.app{ width:100%; max-width:640px; }
+
+/* ---------- header / tide progress (signature element) ---------- */
+.brandbar{
+  display:flex; align-items:baseline; justify-content:space-between;
+  margin-bottom:18px; padding:0 4px;
+}
+.brandbar .brand{
+  font-family:'Noto Serif TC', serif; font-weight:700; font-size:15px;
+  letter-spacing:.06em; color:var(--teal-deep);
+}
+.brandbar .brand span{ color:var(--peony); }
+.brandbar .stepnum{ font-size:12px; color:var(--ink-soft); letter-spacing:.04em; }
+
+.tide-wrap{ position:relative; height:34px; margin-bottom:26px; }
+.tide-track{
+  position:absolute; left:0; right:0; top:16px; height:2px;
+  background:var(--border); border-radius:2px; overflow:visible;
+}
+.tide-fill{
+  position:absolute; left:0; top:0; height:100%;
+  background:linear-gradient(90deg, var(--teal), var(--peony));
+  border-radius:2px; width:0%;
+  transition:width .5s cubic-bezier(.65,0,.35,1);
+}
+.tide-mark{
+  position:absolute; top:50%; transform:translate(-50%,-50%);
+  width:15px; height:15px; border-radius:50%;
+  background:var(--surface); border:2.5px solid var(--border);
+  transition:left .5s cubic-bezier(.65,0,.35,1), border-color .3s, background .3s, box-shadow .3s;
+}
+.tide-mark.done{ border-color:var(--teal); background:var(--teal); }
+.tide-mark.active{ border-color:var(--peony); box-shadow:0 0 0 5px rgba(184,73,107,.15); }
+
+/* ---------- card ---------- */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:40px 40px 34px;
+  box-shadow:0 1px 2px rgba(11,61,58,.04), 0 12px 32px -16px rgba(11,61,58,.14);
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:"";
+  position:absolute; top:0; left:0; right:0; height:4px;
+  background:linear-gradient(90deg, var(--teal), var(--peony));
+}
+@media (max-width:520px){ .card{ padding:30px 22px 26px; border-radius:16px; } }
+
+.eyebrow{
+  font-size:12px; font-weight:600; letter-spacing:.12em; color:var(--peony);
+  text-transform:uppercase; margin-bottom:10px;
+}
+h1.q, h2.q{
+  font-family:'Noto Serif TC', serif; font-weight:600;
+  font-size:22px; line-height:1.5; color:var(--teal-deep); margin:0 0 8px;
+}
+.q-note{ font-size:13.5px; color:var(--ink-soft); line-height:1.6; margin:0 0 22px; }
+.required-tag{ color:var(--peony); font-weight:700; }
+
+/* ---------- intro ---------- */
+.intro-wave{ width:100%; height:auto; display:block; margin-bottom:22px; }
+.intro-title{
+  font-family:'Noto Serif TC', serif; font-weight:700; font-size:26px;
+  line-height:1.45; color:var(--teal-deep); margin:0 0 14px;
+}
+.intro-body{ font-size:14.5px; line-height:1.9; color:#3C5651; margin:0 0 14px; }
+.intro-meta{
+  display:flex; gap:18px; flex-wrap:wrap; margin:22px 0 4px;
+  font-size:12.5px; color:var(--ink-soft);
+}
+.intro-meta div{ display:flex; align-items:center; gap:6px; }
+.intro-meta .dot{ width:6px; height:6px; border-radius:50%; background:var(--peony); }
+
+/* ---------- options ---------- */
+.opt-list{ display:flex; flex-direction:column; gap:10px; }
+.opt{
+  border:1.5px solid var(--border); border-radius:12px; padding:14px 16px;
+  display:flex; align-items:flex-start; gap:12px; cursor:pointer;
+  transition:border-color .15s, background .15s, transform .1s;
+  font-size:14.5px; line-height:1.55; color:var(--ink);
+  background:#FCFDFD;
+}
+.opt:hover{ border-color:var(--peony-soft); background:#FBF6F7; }
+.opt.selected{ border-color:var(--peony); background:#FBF1F4; }
+.opt.selected .mark{ background:var(--peony); border-color:var(--peony); }
+.opt .mark{
+  flex:0 0 auto; width:18px; height:18px; margin-top:1px;
+  border:1.5px solid #C7D6D1; background:#fff;
+  transition:all .15s;
+}
+.opt.radio .mark{ border-radius:50%; position:relative; }
+.opt.radio.selected .mark::after{
+  content:""; position:absolute; inset:4px; border-radius:50%; background:#fff;
+}
+.opt.checkbox .mark{ border-radius:5px; position:relative; }
+.opt.checkbox.selected .mark::after{
+  content:""; position:absolute; left:5px; top:1px; width:5px; height:9px;
+  border-right:2px solid #fff; border-bottom:2px solid #fff; transform:rotate(40deg);
+}
+.opt .label b{ display:block; font-weight:600; }
+.opt .label small{ display:block; color:var(--ink-soft); font-weight:400; margin-top:2px; font-size:12.5px; }
+
+/* ---------- likert ---------- */
+.likert-block{ margin-bottom:22px; }
+.likert-block:last-child{ margin-bottom:0; }
+.likert-title{ font-weight:600; font-size:14.5px; color:var(--teal); margin-bottom:10px; }
+.likert-row{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.likert-label{ flex:0 0 150px; font-size:13px; color:var(--ink); line-height:1.4; }
+.likert-scale{ flex:1; display:flex; justify-content:space-between; gap:6px; }
+.likert-pt{
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;
+  cursor:pointer; padding:4px 0;
+}
+.likert-pt .dot{
+  width:22px; height:22px; border-radius:50%; border:1.5px solid #C7D6D1; background:#fff;
+  transition:all .15s;
+}
+.likert-pt.selected .dot{ background:var(--teal); border-color:var(--teal); box-shadow:0 0 0 4px rgba(18,86,74,.13); }
+.likert-pt span{ font-size:10px; color:var(--ink-soft); }
+@media (max-width:520px){
+  .likert-label{ flex-basis:100px; font-size:12px; }
+  .likert-pt span{ display:none; }
+}
+
+textarea, input[type=text]{
+  width:100%; border:1.5px solid var(--border); border-radius:12px;
+  padding:13px 15px; font-family:inherit; font-size:14px; color:var(--ink);
+  resize:vertical; min-height:90px; background:#FCFDFD;
+  transition:border-color .15s;
+}
+textarea:focus, input[type=text]:focus{ outline:none; border-color:var(--peony); background:#fff; }
+.opt:focus-visible, .likert-pt:focus-visible, button:focus-visible{
+  outline:2.5px solid var(--peony); outline-offset:2px;
+}
+
+.banner{
+  border:1.5px dashed var(--peony-soft); background:#FBF6F7; border-radius:12px;
+  padding:14px 16px; font-size:13.5px; color:#7A3B4D; line-height:1.7; margin-bottom:22px;
+}
+
+/* ---------- nav ---------- */
+.nav{ display:flex; justify-content:space-between; align-items:center; margin-top:30px; }
+.btn{
+  font-family:inherit; font-size:14px; font-weight:600; border-radius:999px;
+  padding:12px 26px; cursor:pointer; border:none; transition:transform .1s, opacity .15s, box-shadow .15s;
+}
+.btn:active{ transform:scale(.97); }
+.btn-primary{ background:var(--teal-deep); color:#fff; box-shadow:0 8px 20px -8px rgba(11,61,58,.5); }
+.btn-primary:hover{ background:var(--teal); }
+.btn-primary:disabled{ opacity:.4; cursor:not-allowed; box-shadow:none; }
+.btn-ghost{ background:transparent; color:var(--ink-soft); padding:12px 8px; }
+.btn-ghost:hover{ color:var(--teal-deep); }
+.err{ font-size:12.5px; color:var(--danger); margin-top:8px; }
+
+/* ---------- thank you ---------- */
+.done-wrap{ text-align:center; padding:20px 6px 4px; }
+.done-icon{ margin:0 auto 18px; width:64px; height:64px; }
+.done-title{ font-family:'Noto Serif TC',serif; font-weight:700; font-size:22px; color:var(--teal-deep); margin-bottom:10px; }
+.done-body{ font-size:14px; color:var(--ink-soft); line-height:1.8; max-width:420px; margin:0 auto; }
+
+.footer-note{ text-align:center; font-size:11.5px; color:#8AA39C; margin-top:22px; }
+
+.fade{ animation:fadeIn .35s ease; }
+@keyframes fadeIn{ from{ opacity:0; transform:translateY(6px);} to{ opacity:1; transform:translateY(0);} }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="brandbar">
+    <div class="brand">海牡丹 <span>Seony</span> · 產品存續評估</div>
+    <div class="stepnum" id="stepnum"></div>
+  </div>
+  <div class="tide-wrap">
+    <div class="tide-track"></div>
+    <div class="tide-fill" id="tideFill"></div>
+    <div id="tideMarks"></div>
+  </div>
+  <div class="card" id="card"></div>
+  <div class="footer-note">您的回覆將匿名彙整，作為公司評估本系列產品存續之依據</div>
+</div>
+
+<script>
+/* ===================== state ===================== */
+const state = {
+  identity: null,          // 'customer' | 'internal'
+  usedProduct: null,       // 'yes' | 'no'  (internal only)
+  frequency: null,
+  items: [],
+  giftItems: [],
+  giftFrequency: null,
+  satisfaction: {},        // { productKey: { effect, texture, scent, packaging, cp } }
+  indirectHeard: null,     // 'yes' | 'no'
+  indirectNote: "",
+  circAware: null,
+  circAgree: null,
+  circLift: null,
+  priceView: null,
+  competeView: null,
+  futureIntent: null,
+  nps: null,
+  goodPoint: "",
+  improve: "",
+  future: "",
+};
+
+function isInternalNoUse(){ return state.identity === 'internal' && state.usedProduct === 'no'; }
+function isInternalUsed(){ return state.identity === 'internal' && state.usedProduct === 'yes'; }
+function hasUsed(){ return state.identity === 'customer' || isInternalUsed(); }
+
+const PRODUCTS = [
+  { key:'scalp', name:'滋養頭皮液', dims:[['effect','效果（改善頭皮／髮況感受）'],['texture','質地與吸收度'],['scent','香氣'],['packaging','包裝設計與使用便利性'],['cp','整體 CP 值']] },
+  { key:'essence', name:'晶潤微乳精華', dims:[['effect','效果（保濕／膚況改善感受）'],['texture','質地與吸收度'],['scent','香氣'],['packaging','包裝設計與使用便利性'],['cp','整體 CP 值']] },
+  { key:'cream', name:'水潤緊緻乳霜', dims:[['effect','效果（緊緻／保濕感受）'],['texture','質地與吸收度'],['scent','香氣'],['packaging','包裝設計與使用便利性'],['cp','整體 CP 值']] },
+  { key:'roll', name:'海木耳蛋捲', dims:[['effect','口感酥脆度'],['texture','風味／鹹甜適中度'],['scent','包裝設計與攜帶便利性'],['packaging','份量與售價合理性'],['cp','整體 CP 值']] },
+];
+
+/* ===================== step engine ===================== */
+// each step: id, skip(state)->bool, render()->{html, mount(root)}, validate()->true/errmsg
+let steps = [];
+let idx = 0;
+
+function buildSteps(){
+  steps = [
+    stepIntro(),
+    stepIdentity(),
+    stepInternalUsage(),
+    stepFrequencyItems(),
+    stepSatisfaction(),
+    stepIndirectFeedback(),
+    stepCircAware(),
+    stepCircAgree(),
+    stepCircLift(),
+    stepPrice(),
+    stepCompete(),
+    stepFutureIntent(),
+    stepNPS(),
+    stepGoodPoint(),
+    stepImprove(),
+    stepFuture(),
+    stepSubmit(),
+  ];
+}
+buildSteps();
+
+function visibleSteps(){ return steps.filter(s => !s.skip(state)); }
+function currentVisibleIndex(){
+  const vis = visibleSteps();
+  return vis.findIndex(s => s === steps[idx]);
+}
+
+function renderTide(){
+  const vis = visibleSteps();
+  const total = vis.length;
+  const curPos = Math.max(0, vis.indexOf(steps[idx]));
+  document.getElementById('stepnum').textContent = `${curPos+1} / ${total}`;
+  const pct = total <= 1 ? 0 : (curPos/(total-1))*100;
+  document.getElementById('tideFill').style.width = pct + '%';
+  const marksWrap = document.getElementById('tideMarks');
+  marksWrap.innerHTML = '';
+  vis.forEach((s,i)=>{
+    const m = document.createElement('div');
+    m.className = 'tide-mark' + (i<curPos?' done':'') + (i===curPos?' active':'');
+    m.style.left = (total<=1?0:(i/(total-1))*100) + '%';
+    marksWrap.appendChild(m);
+  });
+}
+
+function goTo(newIdx, dir){
+  idx = newIdx;
+  while(idx>0 && idx<steps.length-0 && steps[idx] && steps[idx].skip(state)){
+    idx += dir;
+  }
+  render();
+}
+function next(){
+  if(steps[idx].validate){
+    const msg = steps[idx].validate();
+    if(msg){ showErr(msg); return; }
+  }
+  let n = idx+1;
+  while(n<steps.length && steps[n].skip(state)) n++;
+  if(n<steps.length){ idx=n; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+}
+function prev(){
+  let p = idx-1;
+  while(p>=0 && steps[p].skip(state)) p--;
+  if(p>=0){ idx=p; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+}
+function showErr(msg){
+  let el = document.getElementById('errMsg');
+  if(!el){
+    el = document.createElement('div');
+    el.id='errMsg'; el.className='err';
+    document.getElementById('navSlot').before(el);
+  }
+  el.textContent = msg;
+}
+
+function render(){
+  const card = document.getElementById('card');
+  card.innerHTML = '';
+  card.classList.remove('fade'); void card.offsetWidth; card.classList.add('fade');
+  const step = steps[idx];
+  step.render(card);
+  renderTide();
+}
+
+/* ===================== helpers ===================== */
+function el(html){ const d=document.createElement('div'); d.innerHTML=html.trim(); return d.firstChild; }
+
+function optionGroup(container, {type='radio', options, value, onChange}){
+  const wrap = el(`<div class="opt-list"></div>`);
+  options.forEach(o=>{
+    const selected = type==='radio' ? value===o.value : (value||[]).includes(o.value);
+    const item = el(`
+      <div class="opt ${type} ${selected?'selected':''}" tabindex="0" role="${type==='radio'?'radio':'checkbox'}" aria-checked="${selected}">
+        <div class="mark"></div>
+        <div class="label"><b>${o.label}</b>${o.sub?`<small>${o.sub}</small>`:''}</div>
+      </div>`);
+    function toggle(){
+      if(type==='radio'){ onChange(o.value); }
+      else{
+        const arr = new Set(value||[]);
+        arr.has(o.value)?arr.delete(o.value):arr.add(o.value);
+        onChange(Array.from(arr));
+      }
+      render();
+    }
+    item.addEventListener('click', toggle);
+    item.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); } });
+    wrap.appendChild(item);
+  });
+  container.appendChild(wrap);
+}
+
+function likertGroup(container, {label, value, onChange, lowLabel='非常不滿意', highLabel='非常滿意'}){
+  const row = el(`
+    <div class="likert-row">
+      <div class="likert-label">${label}</div>
+      <div class="likert-scale"></div>
+    </div>`);
+  const scale = row.querySelector('.likert-scale');
+  for(let i=1;i<=5;i++){
+    const pt = el(`
+      <div class="likert-pt ${value===i?'selected':''}" tabindex="0">
+        <div class="dot"></div>
+        <span>${i===1?lowLabel:i===5?highLabel:i}</span>
+      </div>`);
+    pt.addEventListener('click', ()=>{ onChange(i); render(); });
+    pt.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); onChange(i); render(); } });
+    scale.appendChild(pt);
+  }
+  container.appendChild(row);
+}
+
+function head(container, {eyebrow, title, note}){
+  if(eyebrow) container.appendChild(el(`<div class="eyebrow">${eyebrow}</div>`));
+  container.appendChild(el(`<h2 class="q">${title}</h2>`));
+  if(note) container.appendChild(el(`<p class="q-note">${note}</p>`));
+}
+
+function navBar(container, {backDisabled=false, nextLabel='下一步', onNext}){
+  const slot = el(`<div id="navSlot" class="nav">
+      <button class="btn btn-ghost" id="btnBack" ${backDisabled?'style="visibility:hidden"':''}>← 上一步</button>
+      <button class="btn btn-primary" id="btnNext">${nextLabel}</button>
+    </div>`);
+  container.appendChild(slot);
+  slot.querySelector('#btnBack').addEventListener('click', prev);
+  slot.querySelector('#btnNext').addEventListener('click', onNext || next);
+}
+
+/* ===================== steps ===================== */
+function stepIntro(){
+  return {
+    skip: ()=>false,
+    render(root){
+      root.appendChild(el(`
+        <svg class="intro-wave" viewBox="0 0 560 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 40 C 60 10, 120 10, 180 40 C 240 70, 300 70, 360 40 C 420 10, 480 10, 560 40" stroke="url(#g1)" stroke-width="3" stroke-linecap="round"/>
+          <defs><linearGradient id="g1" x1="0" y1="0" x2="560" y2="0"><stop stop-color="#12564A"/><stop offset="1" stop-color="#B8496B"/></linearGradient></defs>
+        </svg>
+      `));
+      root.appendChild(el(`<div class="intro-title">海牡丹 Seony 系列產品<br>存續評估問卷</div>`));
+      root.appendChild(el(`<p class="intro-body">感謝您使用或領用「海牡丹 Seony」系列保養品及海木耳蛋捲。本系列以本公司專利海木耳（石花菜／<i>Sarcodia suae</i>）萃取物為核心原料，是公司落實循環經濟的重要研發成果——將海木耳加工副產物再利用於保養品與食品開發。</p>`));
+      root.appendChild(el(`<p class="intro-body">為評估本系列是否具備延續投入之效益，敬請撥冗填寫以下問卷，約需 5-8 分鐘。問卷會依您的身份自動調整題目，不記名進行。</p>`));
+      root.appendChild(el(`
+        <div class="intro-meta">
+          <div><span class="dot"></span>約 5-8 分鐘</div>
+          <div><span class="dot"></span>不記名填答</div>
+          <div><span class="dot"></span>依身份自動調整題目</div>
+        </div>`));
+      navBar(root, { backDisabled:true, nextLabel:'開始填答' });
+    }
+  };
+}
+
+function stepIdentity(){
+  return {
+    skip: ()=>false,
+    validate(){ return state.identity ? null : '請選擇您的身份別'; },
+    render(root){
+      head(root,{ eyebrow:'第一部分・基本資料', title:'1. 您的身份別是？' });
+      optionGroup(root, {
+        type:'radio',
+        value: state.identity,
+        options:[
+          {value:'customer', label:'訂購客戶', sub:'自費購買本系列產品'},
+          {value:'internal', label:'公司內部同仁', sub:'單位領用，作為致贈貴賓禮品'},
+        ],
+        onChange:(v)=>{ state.identity=v; }
+      });
+      navBar(root,{ backDisabled:false });
+    }
+  };
+}
+
+function stepInternalUsage(){
+  return {
+    skip: (s)=> s.identity !== 'internal',
+    validate(){ return state.usedProduct ? null : '請選擇一項'; },
+    render(root){
+      head(root,{ eyebrow:'第一部分・基本資料', title:'1-1. 本次填答的資訊來源是？',
+        note:'由於單位領用多作為致贈貴賓之用，此題用來判斷後續是否需要您評分產品使用感受。' });
+      optionGroup(root, {
+        type:'radio',
+        value: state.usedProduct,
+        options:[
+          {value:'yes', label:'本人有親自使用／試用過產品'},
+          {value:'no', label:'我僅負責採購或致贈作業，並未親自使用產品'},
+        ],
+        onChange:(v)=>{ state.usedProduct=v; }
+      });
+      navBar(root,{});
+    }
+  };
+}
+
+function stepFrequencyItems(){
+  return {
+    skip: ()=>false,
+    validate(){
+      if(hasUsed() || isInternalUsed()){
+        if(!state.frequency) return '請選擇使用／領用頻率';
+      } else if(isInternalNoUse()){
+        if(!state.giftFrequency) return '請選擇採購／致贈頻率';
+      }
+      return null;
+    },
+    render(root){
+      if(isInternalNoUse()){
+        head(root,{ eyebrow:'第一部分・基本資料', title:'2. 您單位採購／致贈本系列產品的頻率：' });
+        optionGroup(root,{
+          type:'radio', value:state.giftFrequency,
+          options:[
+            {value:'monthly', label:'每月固定採購致贈'},
+            {value:'occasional', label:'偶爾因特定場合採購'},
+            {value:'once', label:'僅採購過一次'},
+          ],
+          onChange:v=>{ state.giftFrequency=v; }
+        });
+        root.appendChild(el(`<h2 class="q" style="margin-top:26px;font-size:18px;">3. 曾採購／致贈過的品項（可複選）：</h2>`));
+        optionGroup(root,{
+          type:'checkbox', value:state.giftItems,
+          options: PRODUCTS.map(p=>({value:p.key,label:p.name})),
+          onChange:v=>{ state.giftItems=v; }
+        });
+      } else {
+        head(root,{ eyebrow:'第一部分・基本資料', title:'2. 您使用／領用本系列產品的頻率：' });
+        optionGroup(root,{
+          type:'radio', value:state.frequency,
+          options:[
+            {value:'monthly', label:'每月固定訂購／領用'},
+            {value:'occasional', label:'偶爾購買／領用'},
+            {value:'once', label:'僅使用過一次'},
+            {value:'sample', label:'尚未實際使用，僅收到樣品'},
+          ],
+          onChange:v=>{ state.frequency=v; }
+        });
+        root.appendChild(el(`<h2 class="q" style="margin-top:26px;font-size:18px;">3. 您使用過的品項（可複選）：</h2>`));
+        optionGroup(root,{
+          type:'checkbox', value:state.items,
+          options: PRODUCTS.map(p=>({value:p.key,label:p.name})),
+          onChange:v=>{ state.items=v; }
+        });
+      }
+      navBar(root,{});
+    }
+  };
+}
+
+function stepSatisfaction(){
+  return {
+    skip: (s)=> isInternalNoUse() || (state.items && state.items.length===0 && hasUsed()===true && state.frequency==='sample'),
+    render(root){
+      head(root,{ eyebrow:'第二部分・產品滿意度', title:'4. 請針對您使用過的品項評分',
+        note:'依「效果」「質地／口感」「香氣／風味」「包裝設計」「整體 CP 值」評分，1 分最低、5 分最高。未使用過之品項可略過。' });
+      const list = (state.items && state.items.length) ? PRODUCTS.filter(p=>state.items.includes(p.key)) : PRODUCTS;
+      list.forEach(p=>{
+        const block = el(`<div class="likert-block"><div class="likert-title">${p.name}</div></div>`);
+        state.satisfaction[p.key] = state.satisfaction[p.key] || {};
+        p.dims.forEach(([dimKey,dimLabel])=>{
+          likertGroup(block, {
+            label: dimLabel,
+            value: state.satisfaction[p.key][dimKey],
+            onChange: v=>{ state.satisfaction[p.key][dimKey]=v; }
+          });
+        });
+        root.appendChild(block);
+      });
+      navBar(root,{});
+    }
+  };
+}
+
+function stepIndirectFeedback(){
+  return {
+    skip: (s)=> !isInternalNoUse(),
+    render(root){
+      head(root,{ eyebrow:'第二部分・產品滿意度（簡化）', title:'4. 您是否曾聽聞貴賓／受贈者對產品的回饋？' });
+      root.appendChild(el(`<div class="banner">系統偵測到您尚未親自使用產品，因此本部分已簡化，無需勉強針對產品評分。</div>`));
+      optionGroup(root,{
+        type:'radio', value: state.indirectHeard,
+        options:[
+          {value:'yes', label:'有，我聽過貴賓／受贈者的反應'},
+          {value:'no', label:'沒有，我不清楚使用後的評價'},
+        ],
+        onChange:v=>{ state.indirectHeard=v; }
+      });
+      if(state.indirectHeard==='yes'){
+        root.appendChild(el(`<div style="margin-top:14px;"></div>`));
+        const ta = el(`<textarea placeholder="請簡述貴賓／受贈者提到的回饋內容（選填）"></textarea>`);
+        ta.value = state.indirectNote;
+        ta.addEventListener('input', e=>{ state.indirectNote = e.target.value; });
+        root.appendChild(ta);
+      }
+      navBar(root,{});
+    }
+  };
+}
+
+function stepCircAware(){
+  return {
+    skip:()=>false,
+    validate(){ return state.circAware ? null : '請選擇一項'; },
+    render(root){
+      head(root,{ eyebrow:'第三部分・循環經濟原料認同度',
+        title:'5. 填寫本問卷前，您是否知道本系列核心原料，源自公司將海木耳（石花菜）加工副產物再利用之循環經濟成果？' });
+      optionGroup(root,{
+        type:'radio', value:state.circAware,
+        options:[
+          {value:'before', label:'知道，購買／使用（或採購致贈）前即已了解'},
+          {value:'after', label:'填寫問卷後才知道'},
+          {value:'unclear', label:'仍不清楚'},
+        ],
+        onChange:v=>{ state.circAware=v; }
+      });
+      navBar(root,{});
+    }
+  };
+}
+
+function stepCircAgree(){
+  return {
+    skip:()=>false,
+    render(root){
+      head(root,{ eyebrow:'第三部分・循環經濟原料認同度', title:'6.「原料來自海木耳循環再利用」這項理念，對您的認同程度：' });
+      const block = el(`<div class="likert-block"></div>`);
+      likertGroup(block,{ label:'對循環經濟理念之認同度', value:state.circAgree, onChange:v=>{ state.circAgree=v; } });
+      root.appendChild(block);
+      navBar(root,{});
+    }
+  };
+}
+
+function stepCircLift(){
+  return {
+    skip:()=>false,
+    validate(){ return state.circLift ? null : '請選擇一項'; },
+    render(root){
+      const title = isInternalNoUse()
+        ? '7. 了解此原料背景後，是否會提升您優先選用本系列作為致贈貴賓禮品的意願？'
+        : '7. 了解此原料背景後，是否會提升您對本系列產品的購買／使用意願？';
+      head(root,{ eyebrow:'第三部分・循環經濟原料認同度', title });
+      optionGroup(root,{
+        type:'radio', value:state.circLift,
+        options:[
+          {value:'much', label:'會，明顯提升'},
+          {value:'slight', label:'會，略微提升'},
+          {value:'none', label:'沒有影響'},
+          {value:'no', label:'不會，仍以效果／預算與價格為主要考量'},
+        ],
+        onChange:v=>{ state.circLift=v; }
+      });
+      navBar(root,{});
+    }
+  };
+}
+
+function stepPrice(){
+  return {
+    skip:()=>false,
+    validate(){ return state.priceView ? null : '請選擇一項'; },
+    render(root){
+      const title = isInternalNoUse()
+        ? '8. 作為致贈貴賓的禮品，您認為本系列產品的價格：'
+        : '8. 與市售同類產品相比，您認為本系列產品的價格：';
+      head(root,{ eyebrow:'第四部分・市場需求與延續意願', title });
+      optionGroup(root,{
+        type:'radio', value:state.priceView,
+        options:[
+          {value:'high', label:'明顯偏高'},
+          {value:'okhigh', label:'略高但可接受'},
+          {value:'fair', label:'與市場行情相當'},
+          {value:'good', label:'具有價格優勢'},
+        ],
+        onChange:v=>{ state.priceView=v; }
+      });
+      navBar(root,{});
+    }
+  };
+}
+
+function stepCompete(){
+  return {
+    skip:()=>false,
+    validate(){ return state.competeView ? null : '請選擇一項'; },
+    render(root){
+      const title = isInternalNoUse()
+        ? '9. 與其他常見的企業贈禮相比，您認為本系列產品作為贈禮的競爭力：'
+        : '9. 整體而言，您認為本系列產品與市面同類產品相比的競爭力：';
+      head(root,{ eyebrow:'第四部分・市場需求與延續意願', title });
+      optionGroup(root,{
+        type:'radio', value:state.competeView,
+        options:[
+          {value:'better', label:'更具優勢'},
+          {value:'same', label:'大致相當'},
+          {value:'worse', label:'略遜於市場主流選擇'},
+          {value:'unknown', label:'不了解／未比較過'},
+        ],
+        onChange:v=>{ state.competeView=v; }
+      });
+      navBar(root,{});
+    }
+  };
+}
+
+function stepFutureIntent(){
+  return {
+    skip:()=>false,
+    validate(){ return state.futureIntent ? null : '請選擇一項'; },
+    render(root){
+      const title = isInternalNoUse()
+        ? '10. 您是否希望公司持續投入此系列產品的研發與生產，作為未來致贈選項？'
+        : '10. 您是否希望公司持續投入此系列產品的研發與生產？';
+      head(root,{ eyebrow:'第四部分・市場需求與延續意願', title });
+      optionGroup(root,{
+        type:'radio', value:state.futureIntent,
+        options:[
+          {value:'expand', label:'非常希望持續／擴大'},
+          {value:'keep', label:'希望維持現況'},
+          {value:'adjust', label:'希望調整後再持續'},
+          {value:'stop', label:'不建議繼續投入'},
+        ],
+        onChange:v=>{ state.futureIntent=v; }
+      });
+      navBar(root,{});
+    }
+  };
+}
+
+function stepNPS(){
+  return {
+    skip:()=>false,
+    render(root){
+      const title = isInternalNoUse()
+        ? '11. 您未來持續採購／致贈本系列產品的意願：'
+        : '11. 您未來持續訂購／領用本系列產品的意願：';
+      head(root,{ eyebrow:'第四部分・市場需求與延續意願', title });
+      const block = el(`<div class="likert-block"></div>`);
+      likertGroup(block,{ label:'未來持續意願', value:state.nps, onChange:v=>{ state.nps=v; } });
+      root.appendChild(block);
+      navBar(root,{});
+    }
+  };
+}
+
+function stepGoodPoint(){
+  return {
+    skip:()=>false,
+    render(root){
+      head(root,{ eyebrow:'第五部分・開放式建議', title:'12. 您認為本系列產品最值得延續／最具吸引力的優點是：' });
+      const ta = el(`<textarea placeholder="選填"></textarea>`);
+      ta.value = state.goodPoint;
+      ta.addEventListener('input', e=>{ state.goodPoint=e.target.value; });
+      root.appendChild(ta);
+      navBar(root,{});
+    }
+  };
+}
+
+function stepImprove(){
+  return {
+    skip:()=>false,
+    render(root){
+      const title = isInternalNoUse()
+        ? '13. 您認為致贈流程／包裝禮盒有哪些需要改善或調整之處：'
+        : '13. 您認為需要改善之處，或希望公司調整的方向（例如配方、香氣、包裝、價格、通路等）：';
+      head(root,{ eyebrow:'第五部分・開放式建議', title });
+      const ta = el(`<textarea placeholder="選填"></textarea>`);
+      ta.value = state.improve;
+      ta.addEventListener('input', e=>{ state.improve=e.target.value; });
+      root.appendChild(ta);
+      navBar(root,{});
+    }
+  };
+}
+
+function stepFuture(){
+  return {
+    skip:()=>false,
+    render(root){
+      head(root,{ eyebrow:'第五部分・開放式建議', title:'14. 若公司延續此系列，您期待未來延伸開發的品項或型態（例如新品、新口味、禮盒組合等）：' });
+      const ta = el(`<textarea placeholder="選填"></textarea>`);
+      ta.value = state.future;
+      ta.addEventListener('input', e=>{ state.future=e.target.value; });
+      root.appendChild(ta);
+      navBar(root,{ nextLabel:'送出問卷', onNext: submitSurvey });
+    }
+  };
+}
+
+function stepSubmit(){
+  return {
+    skip:()=>false,
+    render(root){
+      root.appendChild(el(`
+        <div class="done-wrap">
+          <svg class="done-icon" viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="32" r="30" stroke="#12564A" stroke-width="2.5"/>
+            <path d="M20 33 L28 41 L45 24" stroke="#B8496B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="done-title">感謝您完成填答</div>
+          <div class="done-body">您的回饋已送出，將作為海牡丹 Seony 系列產品存續評估與後續研發方向的重要參考。祝您使用（或致贈）愉快！</div>
+        </div>
+      `));
+    }
+  };
+}
+
+/* ===================== submit ===================== */
+async function submitSurvey(){
+  const btn = document.getElementById('btnNext');
+  if(btn){ btn.disabled = true; btn.textContent = '送出中…'; }
+  const payload = {
+    submittedAt: new Date().toISOString(),
+    identity: state.identity,
+    usedProduct: state.usedProduct,
+    frequency: state.frequency,
+    items: state.items,
+    giftFrequency: state.giftFrequency,
+    giftItems: state.giftItems,
+    satisfaction: state.satisfaction,
+    indirectHeard: state.indirectHeard,
+    indirectNote: state.indirectNote,
+    circAware: state.circAware,
+    circAgree: state.circAgree,
+    circLift: state.circLift,
+    priceView: state.priceView,
+    competeView: state.competeView,
+    futureIntent: state.futureIntent,
+    nps: state.nps,
+    goodPoint: state.goodPoint,
+    improve: state.improve,
+    future: state.future,
+  };
+  const key = `responses:${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
+  try{
+    if(window.storage && window.storage.set){
+      await window.storage.set(key, JSON.stringify(payload), true);
+    }
+  }catch(e){
+    console.error('Storage error', e);
+  }
+  idx = steps.length-1;
+  render();
+}
+
+/* ===================== init ===================== */
+render();
+</script>
+</body>
+</html>
