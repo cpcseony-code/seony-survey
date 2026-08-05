@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>海牡丹 Seony｜產品存續評估問卷</title>
+<title>海牡丹 Seony｜品牌及相關產品服務與使用回饋調查問卷</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap');
 
@@ -206,7 +206,7 @@ textarea:focus, input[type=text]:focus{ outline:none; border-color:var(--peony);
 <body>
 <div class="app">
   <div class="brandbar">
-    <div class="brand">海牡丹 <span>Seony</span> · 產品存續評估</div>
+    <div class="brand">海牡丹 <span>Seony</span> · 品牌回饋調查</div>
     <div class="stepnum" id="stepnum"></div>
   </div>
   <div class="tide-wrap">
@@ -215,7 +215,7 @@ textarea:focus, input[type=text]:focus{ outline:none; border-color:var(--peony);
     <div id="tideMarks"></div>
   </div>
   <div class="card" id="card"></div>
-  <div class="footer-note">您的回覆將匿名彙整，作為公司評估本系列產品存續之依據</div>
+  <div class="footer-note">您的回覆將匿名彙整，作為海牡丹品牌及產品服務精進之依據</div>
 </div>
 
 <script>
@@ -419,8 +419,8 @@ function stepIntro(){
           <defs><linearGradient id="g1" x1="0" y1="0" x2="560" y2="0"><stop stop-color="#12564A"/><stop offset="1" stop-color="#B8496B"/></linearGradient></defs>
         </svg>
       `));
-      root.appendChild(el(`<div class="intro-title">海牡丹 Seony 系列產品<br>存續評估問卷</div>`));
-      root.appendChild(el(`<p class="intro-body">感謝您使用或領用「海牡丹 Seony」系列保養品及海木耳蛋捲。本系列以本公司專利海木耳（石花菜／<i>Sarcodia suae</i>）萃取物為核心原料，是公司落實循環經濟的重要研發成果——將海木耳加工副產物再利用於保養品與食品開發。</p>`));
+      root.appendChild(el(`<div class="intro-title">海牡丹 Seony 品牌及相關產品服務<br>與使用回饋調查問卷</div>`));
+      root.appendChild(el(`<p class="intro-body">感謝您使用或領用「海牡丹 Seony」系列保養品及海木耳蛋捲。本系列以本公司專利海木耳（<i>Sarcodia suae</i>）萃取物為核心原料，是公司落實循環經濟的重要研發成果——將海木耳加工副產物再利用於保養品與食品開發。</p>`));
       root.appendChild(el(`<p class="intro-body">為評估本系列是否具備延續投入之效益，敬請撥冗填寫以下問卷，約需 5-8 分鐘。問卷會依您的身份自動調整題目，不記名進行。</p>`));
       root.appendChild(el(`
         <div class="intro-meta">
@@ -583,7 +583,7 @@ function stepCircAware(){
     validate(){ return state.circAware ? null : '請選擇一項'; },
     render(root){
       head(root,{ eyebrow:'第三部分・循環經濟原料認同度',
-        title:'5. 填寫本問卷前，您是否知道本系列核心原料，源自公司將海木耳（石花菜）加工副產物再利用之循環經濟成果？' });
+        title:'5. 填寫本問卷前，您是否知道本系列核心原料，源自公司將海木耳加工副產物再利用之循環經濟成果？' });
       optionGroup(root,{
         type:'radio', value:state.circAware,
         options:[
@@ -779,7 +779,7 @@ function stepSubmit(){
             <path d="M20 33 L28 41 L45 24" stroke="#B8496B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <div class="done-title">感謝您完成填答</div>
-          <div class="done-body">您的回饋已送出，將作為海牡丹 Seony 系列產品存續評估與後續研發方向的重要參考。祝您使用（或致贈）愉快！</div>
+          <div class="done-body">您的回饋已送出，將作為海牡丹品牌及產品服務精進與後續研發方向的重要參考。祝您使用（或致贈）愉快！</div>
         </div>
       `));
     }
