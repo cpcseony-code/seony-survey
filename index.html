@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>海牡丹 Seony｜品牌及相關產品服務與使用回饋調查問卷</title>
+<title>海牡丹 seony｜品牌及相關產品服務與使用回饋調查問卷</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap');
 
@@ -206,7 +206,7 @@ textarea:focus, input[type=text]:focus{ outline:none; border-color:var(--peony);
 <body>
 <div class="app">
   <div class="brandbar">
-    <div class="brand">海牡丹 <span>Seony</span> · 品牌回饋調查</div>
+    <div class="brand">海牡丹 <span>seony</span> · 品牌回饋調查</div>
     <div class="stepnum" id="stepnum"></div>
   </div>
   <div class="tide-wrap">
@@ -222,11 +222,12 @@ textarea:focus, input[type=text]:focus{ outline:none; border-color:var(--peony);
 /* ===================== 後端設定 =====================
    部署完 Google Apps Script 後，把取得的網頁應用程式網址（結尾是 /exec）貼在下面雙引號中間。
    部署步驟請參考文件說明。 */
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxL2Jaw-hndzedCq7QL6v-zKRpOhVo0xMu3F4XOyUyLRz6ndiutguimFKAAxX-2kiXo/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzVO2E2S_fS_hMfAnGEWpUsOH3_x4X_rwr_rTHgobK5sHisnV0RwykAqDvI0P7pgZf4/exec";
 
 /* ===================== state ===================== */
 const state = {
   identity: null,          // 'customer' | 'internal'
+  unitName: "",            // internal only: 領用單位名稱
   usedProduct: null,       // 'yes' | 'no'  (internal only)
   frequency: null,
   items: [],
@@ -424,8 +425,8 @@ function stepIntro(){
           <defs><linearGradient id="g1" x1="0" y1="0" x2="560" y2="0"><stop stop-color="#12564A"/><stop offset="1" stop-color="#B8496B"/></linearGradient></defs>
         </svg>
       `));
-      root.appendChild(el(`<div class="intro-title">海牡丹 Seony 品牌及相關產品服務<br>與使用回饋調查問卷</div>`));
-      root.appendChild(el(`<p class="intro-body">感謝您使用或領用「海牡丹 Seony」系列保養品及海木耳蛋捲。本系列以本公司專利海木耳（<i>Sarcodia suae</i>）萃取物為核心原料，是公司落實循環經濟的重要研發成果——將海木耳加工副產物再利用於保養品與食品開發。</p>`));
+      root.appendChild(el(`<div class="intro-title">海牡丹 seony 品牌及相關產品服務<br>與使用回饋調查問卷</div>`));
+      root.appendChild(el(`<p class="intro-body">感謝您使用或領用「海牡丹 seony」系列保養品及海木耳蛋捲。本系列以本公司專利海木耳（<i>Sarcodia suae</i>）萃取物為核心原料，是公司落實循環經濟的重要研發成果——將海木耳加工副產物再利用於保養品與食品開發。</p>`));
       root.appendChild(el(`<p class="intro-body">為評估本系列是否具備延續投入之效益，敬請撥冗填寫以下問卷，約需 5-8 分鐘。問卷會依您的身份自動調整題目，不記名進行。</p>`));
       root.appendChild(el(`
         <div class="intro-meta">
@@ -441,7 +442,11 @@ function stepIntro(){
 function stepIdentity(){
   return {
     skip: ()=>false,
-    validate(){ return state.identity ? null : '請選擇您的身份別'; },
+    validate(){
+      if(!state.identity) return '請選擇您的身份別';
+      if(state.identity==='internal' && !state.unitName.trim()) return '請填寫您所屬的單位名稱';
+      return null;
+    },
     render(root){
       head(root,{ eyebrow:'第一部分・基本資料', title:'1. 您的身份別是？' });
       optionGroup(root, {
@@ -453,6 +458,15 @@ function stepIdentity(){
         ],
         onChange:(v)=>{ state.identity=v; }
       });
+      if(state.identity==='internal'){
+        root.appendChild(el(`<div style="margin-top:16px;"></div>`));
+        const label = el(`<div class="likert-title" style="margin-bottom:8px;">您所屬的單位名稱 <span class="required-tag">＊</span></div>`);
+        root.appendChild(label);
+        const input = el(`<input type="text" placeholder="例如：綠能科技研究所" />`);
+        input.value = state.unitName;
+        input.addEventListener('input', e=>{ state.unitName = e.target.value; });
+        root.appendChild(input);
+      }
       navBar(root,{ backDisabled:false });
     }
   };
@@ -802,6 +816,7 @@ async function submitSurvey(){
   const payload = {
     submittedAt: new Date().toISOString(),
     identity: state.identity,
+    unitName: state.unitName,
     usedProduct: state.usedProduct,
     frequency: state.frequency,
     items: state.items,
