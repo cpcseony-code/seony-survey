@@ -219,6 +219,11 @@ textarea:focus, input[type=text]:focus{ outline:none; border-color:var(--peony);
 </div>
 
 <script>
+/* ===================== 後端設定 =====================
+   部署完 Google Apps Script 後，把取得的網頁應用程式網址（結尾是 /exec）貼在下面雙引號中間。
+   部署步驟請參考文件說明。 */
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxL2Jaw-hndzedCq7QL6v-zKRpOhVo0xMu3F4XOyUyLRz6ndiutguimFKAAxX-2kiXo/exec";
+
 /* ===================== state ===================== */
 const state = {
   identity: null,          // 'customer' | 'internal'
@@ -788,6 +793,10 @@ function stepSubmit(){
 
 /* ===================== submit ===================== */
 async function submitSurvey(){
+  if(steps[idx].validate){
+    const msg = steps[idx].validate();
+    if(msg){ showErr(msg); return; }
+  }
   const btn = document.getElementById('btnNext');
   if(btn){ btn.disabled = true; btn.textContent = '送出中…'; }
   const payload = {
@@ -812,13 +821,31 @@ async function submitSurvey(){
     improve: state.improve,
     future: state.future,
   };
-  const key = `responses:${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
-  try{
-    if(window.storage && window.storage.set){
-      await window.storage.set(key, JSON.stringify(payload), true);
+
+  let ok = false;
+  let configured = APPS_SCRIPT_URL && APPS_SCRIPT_URL.indexOf('PASTE_YOUR') === -1;
+  if(!configured){
+    console.warn('APPS_SCRIPT_URL 尚未設定，回覆不會被儲存。');
+    ok = true; // 讓開發測試時仍可看到完成畫面
+  } else {
+    try{
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method:'POST',
+        headers:{ 'Content-Type':'text/plain;charset=utf-8' }, // 用 text/plain 避免觸發 CORS 預檢請求
+        body: JSON.stringify(payload)
+      });
+      const json = await res.json();
+      ok = !!json.ok;
+    }catch(err){
+      console.error('Submit error', err);
+      ok = false;
     }
-  }catch(e){
-    console.error('Storage error', e);
+  }
+
+  if(!ok){
+    if(btn){ btn.disabled=false; btn.textContent='送出問卷'; }
+    showErr('送出時發生問題，請確認網路連線後再試一次。');
+    return;
   }
   idx = steps.length-1;
   render();
